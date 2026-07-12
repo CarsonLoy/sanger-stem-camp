@@ -1,0 +1,5 @@
+dist/
+.astro/
+node_modules/
+package-lock.json
+Sanger_STEM_Camp_Day_1_Complete_Source.txt
