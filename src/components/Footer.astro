@@ -1,0 +1,102 @@
+---
+interface Props {
+  siteName?: string;
+  description?: string;
+  links?: Array<{ label: string; href: string }>;
+}
+
+const {
+  siteName = "Sanger STEM Camp",
+  description = "A practical guide for hosting an approachable, hands-on STEM camp.",
+  links = [],
+} = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <p class="site-name">{siteName}</p>
+      <p class="description">{description}</p>
+    </div>
+    {
+      links.length > 0 && (
+        <nav aria-label="Footer navigation">
+          <ul>
+            {links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+  <div class="footer-meta">
+    <p>&copy; {year} {siteName}</p>
+    <p>Built to help the next organizer feel ready.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: var(--space-16)
+      max(var(--space-4), calc((100% - var(--wide-width)) / 2));
+    border-top: 1px solid var(--color-border);
+    background: var(--color-navy-deep);
+    color: #dfe9f4;
+  }
+
+  .footer-inner,
+  .footer-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-8);
+  }
+
+  .site-name {
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 700;
+  }
+
+  .description {
+    max-width: 34rem;
+    margin-top: var(--space-2);
+    color: #b9c9da;
+    font-size: var(--text-sm);
+  }
+
+  ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    list-style: none;
+  }
+
+  a {
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .footer-meta {
+    padding-top: var(--space-8);
+    margin-top: var(--space-10);
+    border-top: 1px solid rgb(255 255 255 / 14%);
+    color: #9fb1c6;
+    font-size: var(--text-xs);
+  }
+
+  @media (width <= 42rem) {
+    .footer-inner,
+    .footer-meta {
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+  }
+</style>
