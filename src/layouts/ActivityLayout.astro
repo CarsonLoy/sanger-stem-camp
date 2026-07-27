@@ -1,0 +1,311 @@
+---
+import type { MarkdownHeading } from "astro";
+import ReadingNavigation from "../components/ReadingNavigation.astro";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  headings: MarkdownHeading[];
+  showNavigation?: boolean;
+}
+
+const { title, description, headings, showNavigation = true } = Astro.props;
+const contentHeadings = headings.slice(1);
+const sectionDepth = Math.min(
+  ...contentHeadings.map((heading) => heading.depth),
+);
+const sections = contentHeadings
+  .filter((heading) => heading.depth === sectionDepth)
+  .map((heading) => ({ id: heading.slug, label: heading.text }));
+const hasNavigation = showNavigation && sections.length > 0;
+---
+
+<BaseLayout {title} {description}>
+  <div
+    class:list={[
+      "activity-layout",
+      { "activity-layout--simple": !hasNavigation },
+    ]}
+  >
+    {hasNavigation && <ReadingNavigation {sections} label="On this page" />}
+    <article
+      class:list={[
+        "activity-prose",
+        { "activity-sections--h1": sectionDepth === 1 },
+      ]}
+    >
+      <slot />
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .activity-layout {
+    display: grid;
+    width: min(100% - 2rem, 72rem);
+    padding-block: clamp(var(--space-10), 7vw, var(--space-20));
+    margin-inline: auto;
+    align-items: start;
+    gap: clamp(var(--space-8), 5vw, var(--space-16));
+    grid-template-columns: 12rem minmax(0, 48rem);
+  }
+
+  .activity-prose {
+    min-width: 0;
+    color: var(--color-ink);
+  }
+
+  .activity-layout--simple {
+    display: block;
+    width: min(100% - 2rem, 48rem);
+  }
+
+  .activity-prose :global(h1) {
+    max-width: 17ch;
+    margin-bottom: var(--space-8);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.08;
+  }
+
+  .activity-prose:not(.activity-sections--h1) :global(h2),
+  .activity-prose.activity-sections--h1 :global(h1:not(:first-child)) {
+    padding-top: var(--space-16);
+    margin-top: var(--space-16);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--text-3xl);
+    scroll-margin-top: 7rem;
+  }
+
+  .activity-prose.activity-sections--h1 :global(h2) {
+    margin-top: var(--space-10);
+    font-family: var(--font-body);
+    font-size: var(--text-xl);
+    letter-spacing: -0.012em;
+  }
+
+  .activity-prose :global(h3) {
+    margin-top: var(--space-10);
+    font-family: var(--font-body);
+    font-size: var(--text-xl);
+    letter-spacing: -0.012em;
+  }
+
+  .activity-prose :global(h4) {
+    margin-top: var(--space-8);
+  }
+
+  .activity-prose :global(p) {
+    margin-top: var(--space-5);
+    color: var(--color-ink-soft);
+    font-size: var(--text-base);
+    line-height: 1.78;
+  }
+
+  .activity-prose :global(h1 + p) {
+    margin-top: 0;
+    color: var(--color-ink-soft);
+    font-size: var(--text-lg);
+    line-height: 1.7;
+  }
+
+  .activity-prose :global(ul),
+  .activity-prose :global(ol) {
+    padding-left: 1.45rem;
+    margin-block: var(--space-5) 0;
+    color: var(--color-ink-soft);
+  }
+
+  .activity-prose :global(li) {
+    padding-left: var(--space-2);
+    line-height: 1.7;
+  }
+
+  .activity-prose :global(li + li) {
+    margin-top: var(--space-2);
+  }
+
+  .activity-prose :global(ol > li::marker) {
+    color: var(--color-teal-dark);
+    font-weight: 700;
+  }
+
+  .activity-prose :global(ul > li::marker) {
+    color: var(--color-teal);
+  }
+
+  .activity-prose :global(blockquote) {
+    padding-left: var(--space-5);
+    margin: var(--space-8) 0 0;
+    border-left: 3px solid var(--color-teal);
+  }
+
+  .activity-prose :global(blockquote p) {
+    font-style: italic;
+  }
+
+  .activity-prose :global(hr) {
+    margin-block: var(--space-16);
+    border: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .activity-prose :global(hr:has(+ h1, + h2)) {
+    margin-bottom: 0;
+  }
+
+  .activity-prose:not(.activity-sections--h1) :global(hr + h2),
+  .activity-prose.activity-sections--h1 :global(hr + h1) {
+    margin-top: 0;
+    border-top: 0;
+  }
+
+  .activity-prose :global(table) {
+    width: 100%;
+    margin-top: var(--space-6);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .activity-prose :global(th),
+  .activity-prose :global(td) {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .activity-prose :global(thead th) {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface-soft);
+    color: var(--color-ink);
+  }
+
+  .activity-prose :global(img) {
+    width: auto;
+    max-width: 100%;
+    max-height: 46rem;
+    margin: var(--space-10) auto 0;
+    object-fit: contain;
+  }
+
+  .activity-prose :global(p:has(> img)) {
+    max-width: none;
+    margin-top: 0;
+  }
+
+  .activity-prose :global(p:has(> .missing-image)) {
+    max-width: none;
+    margin-top: 0;
+  }
+
+  .activity-prose :global(.missing-image) {
+    display: flex;
+    min-height: 15rem;
+    padding: var(--space-8);
+    margin: var(--space-10) auto 0;
+    border: 1px dashed var(--color-border);
+    background: var(--color-surface-soft);
+    color: var(--color-ink-muted);
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .activity-prose :global(.missing-image__title) {
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+
+  .activity-prose :global(.missing-image__description) {
+    margin-top: var(--space-2);
+  }
+
+  .activity-prose :global(.missing-image code) {
+    margin-top: var(--space-3);
+    font-size: var(--text-xs);
+    overflow-wrap: anywhere;
+  }
+
+  .activity-prose :global(p:has(> img) + p > em:only-child) {
+    display: block;
+    margin-top: calc(var(--space-3) * -1);
+    color: var(--color-ink-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .activity-prose :global(p:has(> .missing-image) + p > em:only-child) {
+    display: block;
+    margin-top: calc(var(--space-3) * -1);
+    color: var(--color-ink-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .activity-prose :global(a[href$=".pdf"]),
+  .activity-prose :global(a[href$=".docx"]),
+  .activity-prose :global(a[href$=".xlsx"]),
+  .activity-prose :global(a[download]) {
+    display: inline-block;
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--color-teal);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .activity-prose :global(code) {
+    padding: 0.12em 0.32em;
+    border-radius: 0.2rem;
+    background: var(--color-surface-soft);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  @media (width <= 62rem) {
+    .activity-layout {
+      width: min(100% - 2rem, 48rem);
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (width <= 38rem) {
+    .activity-prose :global(h1) {
+      font-size: var(--text-3xl);
+    }
+
+    .activity-prose:not(.activity-sections--h1) :global(h2),
+    .activity-prose.activity-sections--h1 :global(h1:not(:first-child)) {
+      padding-top: var(--space-12);
+      margin-top: var(--space-12);
+      font-size: var(--text-2xl);
+    }
+
+    .activity-prose :global(th),
+    .activity-prose :global(td) {
+      padding-inline: var(--space-2);
+    }
+  }
+
+  @media print {
+    .activity-layout {
+      display: block;
+      width: 100%;
+      padding: 0;
+    }
+
+    .activity-prose :global(h2) {
+      break-after: avoid;
+    }
+
+    .activity-prose :global(img),
+    .activity-prose :global(table),
+    .activity-prose :global(ol),
+    .activity-prose :global(ul) {
+      break-inside: avoid;
+    }
+  }
+</style>

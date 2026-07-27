@@ -1,0 +1,59 @@
+---
+import type { MarkdownHeading, MarkdownInstance } from "astro";
+import ActivityLayout from "../../layouts/ActivityLayout.astro";
+
+type ActivityFrontmatter = {
+  title?: string;
+  description?: string;
+};
+
+type ActivityModule = MarkdownInstance<ActivityFrontmatter>;
+
+export function getStaticPaths() {
+  const activities = import.meta.glob<ActivityModule>(
+    "../../../content/day-*/*.md",
+    {
+      eager: true,
+    },
+  );
+
+  return Object.entries(activities).map(([path, activity]) => {
+    const parts = path.split("/");
+    const filename = parts.at(-1) ?? "";
+    const day = parts.at(-2) ?? "";
+    const slug = filename.replace(/\.md$/, "");
+    const headings = activity.getHeadings();
+    const title =
+      activity.frontmatter.title ??
+      headings.find((heading) => heading.depth === 1)?.text ??
+      slug;
+
+    return {
+      params: { day, slug },
+      props: { path, headings, title },
+    };
+  });
+}
+
+interface Props {
+  path: string;
+  headings: MarkdownHeading[];
+  title: string;
+}
+
+const { path, headings, title } = Astro.props;
+const activityModules = import.meta.glob<ActivityModule>(
+  "../../../content/day-*/*.md",
+  { eager: true },
+);
+const activity = activityModules[path];
+const { Content } = activity;
+---
+
+<ActivityLayout
+  {title}
+  description={activity.frontmatter.description}
+  {headings}
+>
+  <Content />
+</ActivityLayout>

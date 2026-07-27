@@ -1,0 +1,11 @@
+---
+import { Content, getHeadings } from "../../content/home.md";
+import ActivityLayout from "../layouts/ActivityLayout.astro";
+
+const headings = getHeadings();
+const title = headings.find((heading) => heading.depth === 1)?.text ?? "Home";
+---
+
+<ActivityLayout {title} {headings} showNavigation={false}>
+  <Content />
+</ActivityLayout>

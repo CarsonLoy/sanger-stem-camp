@@ -1,0 +1,93 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { footerNavigation, primaryNavigation, site } from "../config/site";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  image,
+  noIndex = false,
+} = Astro.props;
+const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const pathname = Astro.url.pathname.startsWith(basePath)
+  ? Astro.url.pathname
+  : `${basePath}${Astro.url.pathname}`;
+const currentPath = pathname.endsWith("/") ? pathname : `${pathname}/`;
+const socialImage = image ? new URL(image, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta
+      name="twitter:card"
+      content={socialImage ? "summary_large_image" : "summary"}
+    />
+    <title>{pageTitle}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <Header
+      siteName={site.name}
+      homeHref={site.homeHref}
+      items={primaryNavigation}
+      {currentPath}
+    />
+    <main id="main-content" tabindex="-1"><slot /></main>
+    <Footer
+      siteName={site.name}
+      description={site.description}
+      links={footerNavigation}
+    />
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: fixed;
+    z-index: 100;
+    top: var(--space-3);
+    left: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--color-navy-deep);
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--transition-fast);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  #main-content:focus {
+    outline: none;
+  }
+</style>
