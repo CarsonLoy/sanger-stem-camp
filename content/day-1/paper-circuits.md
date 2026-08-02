@@ -55,7 +55,7 @@ Before class begins, build one completed example yourself. Keep it nearby throug
 
 Begin by asking a simple question:
 
-**"What does electricity need in order to make a light turn on?"**
+> **"What does electricity need in order to make a light turn on?"**
 
 Allow students to offer a few ideas before introducing the concept of a circuit.
 

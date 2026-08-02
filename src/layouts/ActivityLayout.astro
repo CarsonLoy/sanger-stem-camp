@@ -145,19 +145,7 @@ const hasNavigation = showNavigation && sections.length > 0;
   }
 
   .activity-prose :global(hr) {
-    margin-block: var(--space-16);
-    border: 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .activity-prose :global(hr:has(+ h1, + h2)) {
-    margin-bottom: 0;
-  }
-
-  .activity-prose:not(.activity-sections--h1) :global(hr + h2),
-  .activity-prose.activity-sections--h1 :global(hr + h1) {
-    margin-top: 0;
-    border-top: 0;
+    display: none;
   }
 
   .activity-prose :global(table) {
