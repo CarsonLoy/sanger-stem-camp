@@ -8,7 +8,7 @@ At the end of the activity, every student should leave with a personalized light
 
 ![Completed paper circuit](images/day1/paper-circuits/finished-example.jpg)
 
-*Completed paper circuit using copper tape, a CR2032 battery, and a single LED.*
+*Completed paper circuit using copper tape, a CR2032 battery, and two LEDs.*
 
 ---
 
@@ -96,9 +96,9 @@ Instead of fixing problems yourself, ask questions.
 - Is the LED inserted the same way as the example?
 - Is the tape firmly pressed onto the paper?
 
-![Students building circuits](images/day1/paper-circuits/students-working.jpg)
+![Student collecting circuit materials](images/day1/paper-circuits/students-collecting-materials.jpg)
 
-*After every demonstration, pause and allow students to complete that step before moving on.*
+*Students can choose their LED color while collecting materials before they begin building the circuit.*
 
 ---
 
@@ -116,7 +116,7 @@ The LED only lights when electricity can travel in a complete loop from one side
 
 If any part of that loop is interrupted, the LED stays off.
 
-![Simple paper circuit diagram](images/day1/paper-circuits/simple-circuit-diagram.png)
+![Simple paper circuit diagram](images/day1/paper-circuits/simple-circuit-diagram.svg)
 
 *A complete loop allows electricity to flow from the battery, through the LED, and back to the battery.*
 

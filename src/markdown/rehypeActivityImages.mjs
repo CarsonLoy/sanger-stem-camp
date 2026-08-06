@@ -46,6 +46,19 @@ function missingImage(src, alt) {
 function visitImages(node, base) {
   if (Array.isArray(node.children)) {
     node.children = node.children.map((child) => {
+      if (child.type === "element" && child.tagName === "a") {
+        const href = String(child.properties?.href ?? "");
+        const opensDocument = /\.(?:pdf|docx|xlsx)(?:[?#]|$)/i.test(href);
+
+        if (/^https?:\/\//.test(href) || opensDocument) {
+          child.properties.target = "_blank";
+          child.properties.rel = ["noopener", "noreferrer"];
+        }
+
+        visitImages(child, base);
+        return child;
+      }
+
       if (child.type !== "element" || child.tagName !== "img") {
         visitImages(child, base);
         return child;

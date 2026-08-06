@@ -234,15 +234,27 @@ const hasNavigation = showNavigation && sections.length > 0;
     text-align: center;
   }
 
-  .activity-prose :global(a[href$=".pdf"]),
-  .activity-prose :global(a[href$=".docx"]),
-  .activity-prose :global(a[href$=".xlsx"]),
   .activity-prose :global(a[download]) {
     display: inline-block;
     padding-block: var(--space-2);
     border-bottom: 1px solid var(--color-teal);
     font-weight: 700;
     text-decoration: none;
+  }
+
+  .activity-prose :global(.download-button) {
+    padding: var(--space-1) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-teal-dark);
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    line-height: 1.4;
+  }
+
+  .activity-prose :global(.download-button:hover) {
+    background: var(--color-navy);
+    color: var(--color-white);
   }
 
   .activity-prose :global(code) {
